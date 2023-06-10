@@ -34,7 +34,7 @@ export const useUserStore = defineStore(
 
     const tryCreateConversationId = async (tryCount = 0) => {
       if (tryCount >= maxTryCreateConversationIdCount) {
-        console.log(`已重试 ${tryCount} 次，自动创建停止`);
+        console.log(`已重試 ${tryCount} 次，自動創建停止`);
         return;
       }
       const conversationRes = await fetch('/turing/conversation/create', {
@@ -43,12 +43,12 @@ export const useUserStore = defineStore(
         .then((res) => res.json())
         .catch((err) => `error`);
       if (conversationRes?.result?.value === 'Success') {
-        console.log('成功创建会话ID : ', conversationRes.conversationId);
+        console.log('成功創建會話ID : ', conversationRes.conversationId);
         CIB.manager.conversation.updateId(conversationRes.conversationId, getConversationExpiry(), conversationRes.clientId, conversationRes.conversationSignature);
       } else {
         await sleep(300);
         tryCount += 1;
-        console.log(`开始第 ${tryCount} 次重试创建会话ID`);
+        console.log(`開始第 ${tryCount} 次重試創建會話ID`);
         cookies.set(randIpCookieName, '', -1);
         tryCreateConversationId(tryCount);
       }
@@ -62,11 +62,11 @@ export const useUserStore = defineStore(
     const checkUserToken = () => {
       const token = getUserToken();
       if (!token) {
-        // 未登录不显示历史记录
+        // 未登錄不顯示歷史記錄
         CIB.config.features.enableGetChats = false;
         CIB.vm.sidePanel.isVisibleMobile = false;
         CIB.vm.sidePanel.isVisibleDesktop = false;
-        // 创建会话id
+        // 創建會話id
         tryCreateConversationId();
       }
     };
